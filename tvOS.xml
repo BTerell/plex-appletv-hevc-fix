@@ -13,8 +13,8 @@
   <DirectPlayProfiles>
     <!-- HEVC/H.265 support for 4K Direct Play -->
     <VideoProfile container="mp4,mov" codec="hevc,h264,mpeg4" audioCodec="aac,ac3,eac3" subtitleCodec="mov_text,tx3g,ttxt,text" />
-    <!-- MKV container with HEVC and lossless audio -->
-    <VideoProfile container="mkv" codec="hevc,h264" audioCodec="aac,ac3,eac3,dca,truehd,flac" />
+    <!-- MKV container with HEVC (Apple TV supports AAC, AC3, E-AC3 only) -->
+    <VideoProfile container="mkv" codec="hevc,h264" audioCodec="aac,ac3,eac3" />
     <!-- HLS Direct Play -->
     <VideoProfile protocol="hls" container="mpegts" codec="h264,hevc" audioCodec="aac,ac3,eac3" />
     <!-- HTTP protocol for MP4/HEVC (fixes MDE error) -->

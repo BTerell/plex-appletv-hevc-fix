@@ -1,5 +1,11 @@
 # Fix Apple TV 4K Plex Buffering - HEVC/4K Direct Play Not Working
 
+![Plex Version](https://img.shields.io/badge/Plex-v1.32%2B-e5a00d)
+![Apple TV](https://img.shields.io/badge/Apple%20TV-4K%20(all%20models)-000000)
+![Platform](https://img.shields.io/badge/Platform-Docker%20%7C%20Linux%20%7C%20macOS%20%7C%20Windows-blue)
+
+> **Tested on:** Plex Media Server v1.32-1.40+, Apple TV 4K (2017/2021/2022 models), tvOS 15-17
+
 ## Problem
 
 When pressing "Play" on 4K HEVC movies in Plex on Apple TV 4K, you get buffering or errors, but manually selecting the version works fine.
@@ -120,27 +126,38 @@ Start-Service -Name "PlexService"
 
 ### Step 4: Verify Direct Play is Working
 
-During playback, check the dashboard:
-1. Go to **Plex Web → Settings → Dashboard**
-2. Look for your playback session
-3. It should show **"Direct Play"** with **HEVC** codec
+**During Playback:**
+1. Open **Plex Web UI → Settings → Dashboard**
+2. Find your active playback session
+3. Check the playback info shows:
+   - ✅ **Direct Play** (not "Direct Stream" or "Transcode")
+   - ✅ Codec: **HEVC** or **H265**
+   - ✅ Container: **mkv** or **mp4**
+
+**Or check "Now Playing" tray:**
+- Click on the session → Shows `(playing)` with no transcoding icon
 
 ## What This Fixes
 
-The default tvOS.xml profile in Plex only supports:
-- H.264 codec (not HEVC)
-- 1080p max resolution
-- No HTTP protocol support for MP4/HEVC
+### Before vs After Comparison
 
-This causes Plex's Media Decision Engine (MDE) to reject Direct Play and attempt transcoding.
+| Feature | Default tvOS Profile | Custom Profile |
+|---------|---------------------|----------------|
+| Video Codecs | H.264 only | H.264, HEVC/H.265 |
+| Max Resolution | 1080p | 4K (3840×2160) |
+| Color Depth | 8-bit | 10-bit HDR |
+| Containers | MP4, MOV (limited) | MP4, MOV, MKV |
+| HTTP Protocol | Not supported | Full support |
+| Audio Codecs | AAC, AC3 (limited) | AAC, AC3, E-AC3 (Dolby Digital Plus) |
 
-The custom profile adds:
-- ✅ HEVC/H.265 codec support
-- ✅ 4K (3840x2160) resolution support
-- ✅ HTTP protocol support for MP4/HEVC containers
-- ✅ 10-bit color depth support
-- ✅ MKV container support
-- ✅ Lossless audio (DTS-HD MA, TrueHD, FLAC)
+### Common Error Messages This Fixes
+
+If you see these in Plex logs or Apple TV, this profile will fix them:
+- `"no direct play video profile exists for http/mp4/hevc"`
+- `"no direct play video profile exists for protocol http, with container mkv, and video codec hevc"`
+- `"Direct Play is disabled"`
+- `"media must be transcoded in order to use the hls protocol"`
+- `"MDE: no direct play video profile exists for protocol http"`
 
 ## Troubleshooting
 
@@ -164,21 +181,59 @@ The custom profile adds:
 - **macOS:** `~/Library/Application Support/Plex Media Server/`
 - **Windows:** `%LOCALAPPDATA%\Plex Media Server\`
 
+## Known Limitations
+
+**What this DOES NOT fix:**
+- ❌ Network bandwidth issues (you still need 15-40 Mbps for 4K)
+- ❌ Server hardware limitations (weak CPU/GPU for transcoding)
+- ❌ Subtitle compatibility (forced transcoding for certain subtitle formats like PGS)
+- ❌ DTS/DTS-HD audio (Apple TV doesn't support DTS - will transcode to AC3)
+- ❌ TrueHD/Dolby Atmos via TrueHD (requires eARC passthrough, not supported via Plex)
+
+**Apple TV Requirements:**
+- ✅ Apple TV 4K (1st gen or later) - older Apple TV HD doesn't support HEVC
+- ✅ tvOS 11+ (recommended: tvOS 15+)
+- ✅ For Dolby Atmos: eARC-capable receiver (E-AC3/JOC format only)
+
 ## Technical Details
 
 This fix addresses the outdated A8-based tvOS profile that Plex ships by default, which doesn't support modern Apple TV 4K (A10X/A12/A15) capabilities including:
 - Hardware HEVC decoding up to 4K60
 - 10-bit HDR/Dolby Vision
-- Dolby Atmos/TrueHD audio passthrough
+- E-AC3 (Dolby Digital Plus) with Atmos metadata
+
+## Quick Validation
+
+After installing, verify the profile is loaded:
+
+```bash
+# Docker - check logs during startup
+docker logs plex 2>&1 | grep -i "profile"
+
+# Linux - monitor logs
+tail -f "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Logs/Plex Media Server.log" | grep -i "profile"
+
+# Look for: "Loading client profile: tvOS"
+```
+
+The profile should appear as a custom client profile in Plex's Media Decision Engine (MDE).
 
 ## Contributing
 
-Found this helpful? Please star the repo! Have improvements? PRs are welcome.
+⭐ **Found this helpful? Please star the repo!** ⭐
+
+Have improvements or found issues? PRs and bug reports are welcome.
+
+### Discussion
+- Having issues? [Open an issue](https://github.com/BTerell/plex-appletv-hevc-fix/issues)
+- Questions? [Start a discussion](https://github.com/BTerell/plex-appletv-hevc-fix/discussions)
 
 ## License
 
-MIT License - Feel free to use and modify.
+MIT License - Feel free to use, modify, and distribute.
 
 ---
 
 **Note:** This profile has been tested on Apple TV 4K (2017, 2021, 2022 models) with Plex Media Server v1.32+
+
+**Credits:** Profile originally created to fix Apple TV 4K HEVC Direct Play issues. Shared freely to help the Plex community.
