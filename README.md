@@ -43,11 +43,11 @@ sudo mkdir -p "/var/lib/plexmediaserver/Library/Application Support/Plex Media S
 ```bash
 # Docker (adjust path):
 curl -o "/path/to/plex/config/Library/Application Support/Plex Media Server/Profiles/tvOS.xml" \
-  https://raw.githubusercontent.com/YOUR_USERNAME/plex-appletv-hevc-fix/main/tvOS.xml
+  https://raw.githubusercontent.com/BTerell/plex-appletv-hevc-fix/main/tvOS.xml
 
 # Standard Linux:
 sudo curl -o "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Profiles/tvOS.xml" \
-  https://raw.githubusercontent.com/YOUR_USERNAME/plex-appletv-hevc-fix/main/tvOS.xml
+  https://raw.githubusercontent.com/BTerell/plex-appletv-hevc-fix/main/tvOS.xml
 ```
 
 Or manually create the file (see [tvOS.xml](tvOS.xml) in this repo).
