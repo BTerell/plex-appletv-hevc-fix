@@ -144,6 +144,11 @@ Start-Service -Name "PlexService"
 
 ## What This Fixes
 
+✅ **Enables 4K HEVC Direct Play** - No more server-side video transcoding
+✅ **Reduces server CPU/bandwidth requirements** - Direct Play uses minimal resources
+✅ **Fixes "Play" button errors** - Auto-play now works without manual version selection
+✅ **Supports 10-bit HDR content** - Full color depth for modern 4K files
+
 ### Before vs After Comparison
 
 | Feature | Default tvOS Profile | Custom Profile |
@@ -153,7 +158,7 @@ Start-Service -Name "PlexService"
 | Color Depth | 8-bit | 10-bit HDR |
 | Containers | MP4, MOV (limited) | MP4, MOV, MKV |
 | HTTP Protocol | Not supported | Full support |
-| Audio Codecs | AAC, AC3 (limited) | AAC, AC3, E-AC3 (Dolby Digital Plus) |
+| Audio Codecs | AAC, AC3 (limited) | AAA, AC3, E-AC3 (Dolby Digital Plus) |
 
 ### Common Error Messages This Fixes
 
@@ -190,15 +195,18 @@ If you see these in Plex logs or Apple TV, this profile will fix them:
 
 **What this DOES NOT fix:**
 - ❌ Network bandwidth issues (you still need 15-40 Mbps for 4K)
-- ❌ Server hardware limitations (weak CPU/GPU for transcoding)
-- ❌ Subtitle compatibility (forced transcoding for certain subtitle formats like PGS)
-- ❌ DTS/DTS-HD audio (Apple TV doesn't support DTS - will transcode to AC3)
-- ❌ TrueHD/Dolby Atmos via TrueHD (requires eARC passthrough, not supported via Plex)
+- ❌ Subtitle compatibility (PGS/image-based subtitles may force video transcoding)
+- ⚠️ Audio passthrough for DTS/TrueHD (requires eARC-capable receiver - will work but not guaranteed for all setups)
+
+**Apple TV Audio Notes:**
+- ✅ **Works natively:** AAC, AC3 (Dolby Digital 5.1), E-AC3 (Dolby Digital Plus/Atmos)
+- ⚠️ **Requires eARC passthrough:** DTS, DTS-HD MA, TrueHD, FLAC
+- 📝 Without eARC: Plex will transcode these to AC3 (video still Direct Plays!)
 
 **Apple TV Requirements:**
 - ✅ Apple TV 4K (1st gen or later) - older Apple TV HD doesn't support HEVC
 - ✅ tvOS 11+ (recommended: tvOS 15+)
-- ✅ For Dolby Atmos: eARC-capable receiver (E-AC3/JOC format only)
+- ✅ For lossless audio passthrough: eARC-capable receiver (DTS-HD MA, TrueHD)
 
 ## Technical Details
 
