@@ -1,10 +1,15 @@
 # Fix Apple TV 4K Plex Buffering - HEVC/4K Direct Play Not Working
 
-![Plex Version](https://img.shields.io/badge/Plex-v1.32%2B-e5a00d)
+![Plex Version](https://img.shields.io/badge/Plex-v1.40%2B-e5a00d)
 ![Apple TV](https://img.shields.io/badge/Apple%20TV-4K%20(all%20models)-000000)
 ![Platform](https://img.shields.io/badge/Platform-Docker%20%7C%20Linux%20%7C%20macOS%20%7C%20Windows-blue)
 
-> **Tested on:** Plex Media Server v1.32-1.40+, Apple TV 4K (2017/2021/2022 models), tvOS 15-17
+> **Tested on:** Plex Media Server v1.42.2, Apple TV 4K (2nd/3rd gen), tvOS 17-18
+
+**Requirements:**
+- Plex Media Server v1.40 or newer
+- Apple TV 4K (any generation)
+- tvOS 11 or newer
 
 ## Problem
 
@@ -234,6 +239,6 @@ MIT License - Feel free to use, modify, and distribute.
 
 ---
 
-**Note:** This profile has been tested on Apple TV 4K (2017, 2021, 2022 models) with Plex Media Server v1.32+
+**Note:** This profile has been tested on Apple TV 4K (2nd/3rd gen) with Plex Media Server v1.42.2+
 
 **Credits:** Profile originally created to fix Apple TV 4K HEVC Direct Play issues. Shared freely to help the Plex community.
