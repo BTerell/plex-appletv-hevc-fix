@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Client name="tvOS">
+  <!-- Custom profile for modern Apple TV 4K with HEVC support -->
+  <Settings>
+    <Setting name="DirectPlayStreamSelection" value="true" />
+    <Setting name="StreamUnselectedIncompatibleAudioStreams" value="true" />
+  </Settings>
+  <TranscodeTargets>
+    <VideoProfile protocol="hls" container="mpegts" codec="h264" audioCodec="aac,eac3,ac3,mp3" subtitleCodec="eia_608_embedded" context="streaming" />
+    <MusicProfile container="mp3" codec="mp3" />
+    <PhotoProfile container="jpeg" />
+  </TranscodeTargets>
+  <DirectPlayProfiles>
+    <!-- HEVC/H.265 support for 4K Direct Play -->
+    <VideoProfile container="mp4,mov" codec="hevc,h264,mpeg4" audioCodec="aac,ac3,eac3" subtitleCodec="mov_text,tx3g,ttxt,text" />
+    <!-- MKV container with HEVC and lossless audio -->
+    <VideoProfile container="mkv" codec="hevc,h264" audioCodec="aac,ac3,eac3,dca,truehd,flac" />
+    <!-- HLS Direct Play -->
+    <VideoProfile protocol="hls" container="mpegts" codec="h264,hevc" audioCodec="aac,ac3,eac3" />
+    <!-- HTTP protocol for MP4/HEVC (fixes MDE error) -->
+    <VideoProfile protocol="http" container="mp4,mov" codec="hevc,h264" audioCodec="aac,ac3,eac3" />
+    <MusicProfile container="mp3" codec="mp3" />
+    <MusicProfile container="mp4" codec="aac" />
+    <PhotoProfile container="jpeg" />
+  </DirectPlayProfiles>
+  <CodecProfiles>
+    <!-- 4K HEVC with 10-bit color support -->
+    <VideoCodec name="hevc">
+      <Limitations>
+        <UpperBound name="video.width" value="3840" isRequired="false" />
+        <UpperBound name="video.height" value="2160" isRequired="false" />
+        <UpperBound name="video.bitDepth" value="10" />
+        <NotMatch name="video.separateFields" value="1" />
+      </Limitations>
+    </VideoCodec>
+    <VideoCodec name="h264">
+      <Limitations>
+        <UpperBound name="video.width" value="3840" isRequired="false" />
+        <UpperBound name="video.height" value="2160" isRequired="false" />
+        <UpperBound name="video.bitDepth" value="8" />
+        <NotMatch name="video.separateFields" value="1" />
+      </Limitations>
+    </VideoCodec>
+    <VideoAudioCodec name="aac">
+      <Limitations>
+        <UpperBound name="audio.channels" value="2" />
+      </Limitations>
+    </VideoAudioCodec>
+    <VideoAudioCodec name="eac3">
+      <Limitations>
+        <UpperBound name="audio.channels" value="6" />
+      </Limitations>
+    </VideoAudioCodec>
+    <VideoAudioCodec name="ac3">
+      <Limitations>
+        <UpperBound name="audio.channels" value="6" />
+      </Limitations>
+    </VideoAudioCodec>
+  </CodecProfiles>
+</Client>
