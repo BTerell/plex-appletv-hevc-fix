@@ -23,11 +23,19 @@ Ensure these settings:
 
 1. **Stop Plex** (important to prevent file corruption):
 ```bash
-# For Docker:
+# Docker:
 docker stop plex
 
-# For systemd:
+# Linux (systemd):
 sudo systemctl stop plexmediaserver
+
+# macOS:
+# Quit Plex from menu bar or use:
+killall "Plex Media Server"
+
+# Windows:
+# Stop via Services (services.msc) or PowerShell:
+Stop-Service -Name "PlexService"
 ```
 
 2. **Create the Profiles directory** (if it doesn't exist):
@@ -37,6 +45,12 @@ mkdir -p "/path/to/plex/config/Library/Application Support/Plex Media Server/Pro
 
 # Standard Linux install:
 sudo mkdir -p "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Profiles"
+
+# macOS:
+mkdir -p "$HOME/Library/Application Support/Plex Media Server/Profiles"
+
+# Windows (PowerShell):
+New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\Plex Media Server\Profiles"
 ```
 
 3. **Download the custom tvOS.xml file:**
@@ -48,17 +62,30 @@ curl -o "/path/to/plex/config/Library/Application Support/Plex Media Server/Prof
 # Standard Linux:
 sudo curl -o "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Profiles/tvOS.xml" \
   https://raw.githubusercontent.com/BTerell/plex-appletv-hevc-fix/main/tvOS.xml
+
+# macOS:
+curl -o "$HOME/Library/Application Support/Plex Media Server/Profiles/tvOS.xml" \
+  https://raw.githubusercontent.com/BTerell/plex-appletv-hevc-fix/main/tvOS.xml
+
+# Windows (PowerShell):
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/BTerell/plex-appletv-hevc-fix/main/tvOS.xml" `
+  -OutFile "$env:LOCALAPPDATA\Plex Media Server\Profiles\tvOS.xml"
 ```
 
 Or manually create the file (see [tvOS.xml](tvOS.xml) in this repo).
 
-4. **Fix file ownership** (critical!):
+4. **Fix file ownership** (Linux/macOS only):
 ```bash
 # Docker (check your Plex UID - usually 1000):
 chown -R 1000:1000 "/path/to/plex/config/Library/Application Support/Plex Media Server/Profiles/"
 
-# Standard Linux:
+# Linux:
 sudo chown -R plex:plex "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Profiles/"
+
+# macOS:
+chown -R $(whoami) "$HOME/Library/Application Support/Plex Media Server/Profiles/"
+
+# Windows: No ownership changes needed
 ```
 
 5. **Start Plex:**
@@ -66,8 +93,15 @@ sudo chown -R plex:plex "/var/lib/plexmediaserver/Library/Application Support/Pl
 # Docker:
 docker start plex
 
-# systemd:
+# Linux (systemd):
 sudo systemctl start plexmediaserver
+
+# macOS:
+# Open Plex from Applications folder
+
+# Windows:
+# Start via Services (services.msc) or PowerShell:
+Start-Service -Name "PlexService"
 ```
 
 ### Step 3: Test on Apple TV
