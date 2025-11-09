@@ -4,6 +4,13 @@
 
 When pressing "Play" on 4K HEVC movies in Plex on Apple TV 4K, you get buffering or errors, but manually selecting the version works fine.
 
+**Error Message:**
+```
+App cannot direct play this item. No direct play video profile exists for protocol http,
+with container mkv, and video codec hevc
+```
+(May also appear with container `mp4` instead of `mkv`)
+
 **Root Cause:** Plex's default tvOS profile doesn't support Direct Play for modern HEVC/H.265 content over HTTP protocol, causing it to attempt Direct Stream or transcoding which fails.
 
 ## Solution: Custom tvOS Profile
@@ -147,7 +154,9 @@ The custom profile adds:
 - Verify Apple TV quality settings are set to Maximum
 - Check network bandwidth (4K needs 15-40 Mbps)
 - Check Plex logs: `Plex Media Server/Logs/Plex Media Server.log`
-- Look for: `"no direct play video profile exists for http/mp4/hevc"`
+- Look for errors like:
+  - `"no direct play video profile exists for protocol http, with container mkv, and video codec hevc"`
+  - `"no direct play video profile exists for protocol http, with container mp4, and video codec hevc"`
 
 ### Where are Plex files?
 - **Docker:** Volume mount location (check your docker-compose.yml)
